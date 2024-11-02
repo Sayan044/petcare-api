@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id          String        @id @default(uuid())
+  email       String        @unique
+  password    String
+  name        String
+  contact     String?
+  photoUrl    String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  appointment Appointment[]
+  booking     Booking[]
+  record      Record[]
+
+  @@index([email])
+}
+
+model Category {
+  id      String         @id @default(uuid())
+  name    CategoryDomain @unique
+  icon    String // URL
+  doctor  Doctor[]
+  service Service[]
+}
+
+enum CategoryDomain {
+  CAGING_SERVICE  @map("Caging Service")
+  EVENT_SERVICE   @map("Event Service")
+  SITTING_SERVICE @map("Sitting Service")
+  PET_GROOMING    @map("Pet Grooming")
+  VET_DOCTOR      @map("Vet Doctor")
+}
+
+model Doctor {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  name          String
+  image         String // URL
+  address       String
+  experience_yr Int
+  start_time    String
+  end_time      String
+  about         String?
+  fees          Float
+  status        Status        @default(UNVERIFIED)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  category_id   String
+  category      Category      @relation(fields: [category_id], references: [id])
+  appointment   Appointment[]
+}
+
+model Service {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  name        String
+  image       String // URL
+  address     String
+  start_time  String
+  end_time    String
+  about       String?
+  price       Float
+  status      Status    @default(UNVERIFIED)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  category_id String
+  category    Category  @relation(fields: [category_id], references: [id])
+  booking     Booking[]
+}
+
+model Appointment {
+  id          String   @id @default(uuid())
+  date        DateTime
+  time        String
+  note        String?
+  customer_id String
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  doctor_id   String
+  doctor      Doctor   @relation(fields: [doctor_id], references: [id])
+}
+
+model Booking {
+  id          String   @id @default(uuid())
+  date        DateTime
+  time        String
+  note        String?
+  customer_id String
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  service_id  String
+  service     Service  @relation(fields: [service_id], references: [id])
+}
+
+model Record {
+  id                String   @id @default(uuid())
+  type              DogBreed
+  pet_name          String
+  medical_history   String
+  document_link     String[] // URL
+  pet_documents     String[] // URL
+  symptom           Symptom
+  last_vaccination  DateTime
+  next_vaccination  DateTime
+  weight            Float
+  age               Int?
+  emergency_contact String
+  customer_id       String
+  customer          Customer @relation(fields: [customer_id], references: [id])
+}
+
+enum DogBreed {
+  LABRADOR_RETRIEVER @map("Labrador Retriever")
+  GERMAN_SHEPHERD    @map("German Shepherd")
+  BULLDOG            @map("Bulldog")
+  POODLE             @map("Poodle")
+  BEAGLE             @map("Beagle")
+  GOLDEN_RETRIEVER   @map("Golden Retriever")
+  HUSKY              @map("Husky")
+  INDIAN_BREED       @map("Indian Breed")
+}
+
+enum Symptom {
+  COUGHING         @map("Coughing")
+  SNEEZING         @map("Sneezing")
+  VOMITING         @map("Vomiting")
+  DIARRHEA         @map("Diarrhea")
+  LETHARGY         @map("Lethargy")
+  LOSS_OF_APPETITE @map("Loss of Appetite")
+}
+
+enum Status {
+  VERIFIED
+  UNVERIFIED
+}

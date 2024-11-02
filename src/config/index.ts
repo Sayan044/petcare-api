@@ -1,0 +1,15 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+export const CONFIG = {
+    PORT: process.env.PORT,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
+    EMAIL: process.env.EMAIL as string,
+    PASSWORD: process.env.PASSWORD as string,
+    ADMIN_USERNAME: process.env.ADMIN_USERNAME as string,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
+    SECRET_KEY: process.env.SECRET_KEY as string,
+    COOKIE_SECRET: process.env.COOKIE_SECRET as string,
+    JWT_SECRET: process.env.JWT_SECRET as string
+}
