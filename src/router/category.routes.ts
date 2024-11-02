@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createCategoryController } from '../controller/category.controller'
+import { createCategoryController, getCategoryController } from '../controller/category.controller'
 import { isAdmin } from '../middleware/verifyAdmin'
 import multer from 'multer'
 import fs from 'node:fs'
@@ -25,5 +25,6 @@ const upload = multer({
 })
 
 router.route('/').post(isAdmin, upload.single('icon'), createCategoryController)
+router.route('/').get(getCategoryController)
 
 export { router as categoryRouter }
