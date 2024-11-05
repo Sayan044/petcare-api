@@ -70,4 +70,3 @@ function parseCategoryDomain(name: string): CategoryDomain | null {
     }
     return null
 }
-

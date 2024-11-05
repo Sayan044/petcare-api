@@ -9,7 +9,7 @@ export const CONFIG = {
     PASSWORD: process.env.PASSWORD as string,
     ADMIN_USERNAME: process.env.ADMIN_USERNAME as string,
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
-    SECRET_KEY: process.env.SECRET_KEY as string,
+    PASSWORD_SECRET: process.env.PASSWORD_SECRET as string,
     COOKIE_SECRET: process.env.COOKIE_SECRET as string,
     JWT_SECRET: process.env.JWT_SECRET as string
 }

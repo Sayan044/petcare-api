@@ -33,7 +33,7 @@ export async function getCustomerIdByEmail(email: string, password: string): Pro
         throw new APIError("Customer not found")
     }
 
-    const decrypted = CryptoJS.AES.decrypt(customer.password, CONFIG.SECRET_KEY)
+    const decrypted = CryptoJS.AES.decrypt(customer.password, CONFIG.PASSWORD_SECRET)
     const originalPassword = decrypted.toString(CryptoJS.enc.Utf8)
 
     if (originalPassword !== password) {

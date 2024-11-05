@@ -15,10 +15,10 @@ export async function createCategory(name: CategoryDomain, icon: string): Promis
     return category
 }
 
-export async function getCategories(): Promise<Category[] | []> {
+export async function getCategories(): Promise<Category[]> {
     const categories = await db.category.findMany()
 
     if (!categories) throw new AppError("Could not fetch categories")
-   
+
     return categories
 }

@@ -18,7 +18,11 @@ export async function createCustomerController(req: Request, res: Response) {
     }
 
     try {
-        const customer = await createCustomer(parsedData.data.name, parsedData.data.email, CryptoJS.AES.encrypt(parsedData.data.password, CONFIG.SECRET_KEY).toString())
+        const customer = await createCustomer(
+            parsedData.data.name,
+            parsedData.data.email,
+            CryptoJS.AES.encrypt(parsedData.data.password, CONFIG.PASSWORD_SECRET).toString()
+        )
 
         if (!customer) {
             res.status(400).json({ message: "Email is already registered" })

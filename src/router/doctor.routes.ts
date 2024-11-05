@@ -2,6 +2,8 @@ import { Router } from 'express'
 import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
+import { isAdmin } from '../middleware/verifyAdmin'
+import { registerDoctorController } from '../controller/doctor.controller'
 
 const router = Router()
 
@@ -21,5 +23,7 @@ const upload = multer({
         }
     })
 })
+
+router.route('/').post(isAdmin, registerDoctorController)
 
 export { router as doctorRouter }

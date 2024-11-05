@@ -42,14 +42,15 @@ enum CategoryDomain {
 model Doctor {
   id            String        @id @default(uuid())
   email         String        @unique
+  password      String
   name          String
-  image         String // URL
-  address       String
-  experience_yr Int
-  start_time    String
-  end_time      String
+  image         String? // URL
+  address       String?
+  experience_yr Int?
+  start_time    String?
+  end_time      String?
   about         String?
-  fees          Float
+  fees          Float?
   status        Status        @default(UNVERIFIED)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
@@ -74,6 +75,11 @@ model Service {
   category_id String
   category    Category  @relation(fields: [category_id], references: [id])
   booking     Booking[]
+}
+
+enum Status {
+  VERIFIED
+  UNVERIFIED
 }
 
 model Appointment {
@@ -133,9 +139,4 @@ enum Symptom {
   DIARRHEA         @map("Diarrhea")
   LETHARGY         @map("Lethargy")
   LOSS_OF_APPETITE @map("Loss of Appetite")
-}
-
-enum Status {
-  VERIFIED
-  UNVERIFIED
 }

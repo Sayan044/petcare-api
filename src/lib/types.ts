@@ -28,3 +28,10 @@ export const updateProfileInput = z.object({
     name: z.string(),
     contact: z.string().nullable()
 })
+
+export const createDoctorInput = z.object({
+    email: z.string().email(),
+    password: z.string(),
+    name: z.string(),
+    category_name: z.string()
+})
