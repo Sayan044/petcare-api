@@ -35,3 +35,28 @@ export const createDoctorInput = z.object({
     name: z.string(),
     category_name: z.string()
 })
+
+export const loginDoctorInput = z.object({
+    email: z.string().email(),
+    password: z.string()
+})
+
+export const updateDoctorInput = z.object({
+    
+})
+
+export const createServiceInput = z.object({
+    email: z.string().email(),
+    password: z.string(),
+    name: z.string(),
+    category_name: z.string()
+})
+
+export const loginServiceInput = z.object({
+    email: z.string().email(),
+    password: z.string()
+})
+
+export const updateServiceInput = z.object({
+    
+})

@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-export function sendMail(data: any, isAppointment = false, isService = false, isOTP = false) {
+export function sendMail(data: any, isAppointment = false, isService = false, isRegistration = false, isOTP = false) {
     let message: any
 
     if (isAppointment) {
@@ -34,7 +34,7 @@ export function sendMail(data: any, isAppointment = false, isService = false, is
             .replace(/{{time}}/g, appointmentData.time)
 
         message = {
-            from: CONFIG.EMAIL,
+            from: `"Petcare" <${CONFIG.EMAIL}>`,
             to: appointmentData.email,
             subject: "Booking Confirmation",
             html: appointmentTemplate
@@ -59,10 +59,32 @@ export function sendMail(data: any, isAppointment = false, isService = false, is
             .replace(/{{time}}/g, serviceData.time)
 
         message = {
-            from: CONFIG.EMAIL,
+            from: `"Petcare" <${CONFIG.EMAIL}>`,
             to: serviceData.email,
             subject: "Booking Confirmation",
             html: serviceTemplate
+        }
+    }
+    else if (isRegistration) {
+        const registrationTemplatePath = path.join(__dirname, 'mails', 'Registration.html')
+        let registrationTemplate = fs.readFileSync(registrationTemplatePath, 'utf-8')
+
+        const registrationData = {
+            name: data.name,
+            email: data.email,
+            password: data.password
+        }
+
+        registrationTemplate = registrationTemplate
+            .replace(/{{name}}/g, registrationData.name)
+            .replace(/{{email}}/g, registrationData.email)
+            .replace(/{{password}}/g, registrationData.password)
+
+        message = {
+            from: `"Petcare" <${CONFIG.EMAIL}>`,
+            to: registrationData.email,
+            subject: "Credential for your dashboard",
+            html: registrationTemplate
         }
     }
     else if (isOTP) {

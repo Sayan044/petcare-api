@@ -2,6 +2,8 @@ import { Router } from 'express'
 import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
+import { isAdmin } from '../middleware/verifyAdmin'
+import { getServiceProfileController, loginServiceController, registerServiceController } from '../controller/service.controller'
 
 const router = Router()
 
@@ -21,5 +23,9 @@ const upload = multer({
         }
     })
 })
+
+router.route('/').post(isAdmin, registerServiceController)
+router.route('/login').post(loginServiceController)
+router.route('/profile/:service_id').get(getServiceProfileController)
 
 export { router as serviceRouter }

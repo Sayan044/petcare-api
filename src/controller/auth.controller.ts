@@ -26,7 +26,7 @@ export async function generateOTP(req: Request, res: Response) {
 
     console.log(`OTP for ${parsedData.data.email} -> ${otp}`)
 
-    sendMail({ email: parsedData.data.email, otp }, undefined, undefined, true)
+    sendMail({ email: parsedData.data.email, otp }, undefined, undefined, undefined, true)
 
     res.status(200).json({
         message: 'OTP has been sent to your email'

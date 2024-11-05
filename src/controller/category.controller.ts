@@ -2,9 +2,9 @@ import path from 'node:path'
 import { Request, Response } from 'express'
 import { createCategoryInput } from '../lib/types'
 import { createCategory, getCategories } from '../service/category.service'
-import { CategoryDomain } from '@prisma/client'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
+import { parseCategoryDomain } from '../utils/parse'
 
 export async function createCategoryController(req: Request, res: Response) {
     if (!req.file) {
@@ -62,11 +62,4 @@ export async function getCategoryController(req: Request, res: Response) {
             res.status(500).json({ message: "Failed to fetch categories" })
         }
     }
-}
-
-function parseCategoryDomain(name: string): CategoryDomain | null {
-    if (Object.values(CategoryDomain).includes(name as CategoryDomain)) {
-        return name as CategoryDomain
-    }
-    return null
 }
