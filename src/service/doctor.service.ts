@@ -70,3 +70,34 @@ export async function getDoctorById(id: string): Promise<Pick<Doctor, 'name' | '
 
     return doctor
 }
+
+export async function updateDoctor(id: string, name: string, image: string, address: string, experience_yr: number, start_time: string, end_time: string, about: string, fees: number): Promise<string> {
+    const doctor = await db.doctor.findFirst({
+        where: { id }
+    })
+
+    if (!doctor) {
+        throw new APIError("Doctor not found")
+    }
+
+    const updated_doctor = await db.doctor.update({
+        where: { id },
+        data: {
+            name,
+            image,
+            address,
+            experience_yr,
+            start_time,
+            end_time,
+            about,
+            fees,
+            status: 'VERIFIED'
+        }
+    })
+
+    if (!updated_doctor) {
+        throw new APIError("Profile updation failed")
+    }
+
+    return "Profile updated"
+}

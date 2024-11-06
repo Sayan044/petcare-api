@@ -42,7 +42,13 @@ export const loginDoctorInput = z.object({
 })
 
 export const updateDoctorInput = z.object({
-    
+    name: z.string(),
+    address: z.string(),
+    experience_yr: z.string(),
+    start_time: z.string(),
+    end_time: z.string(),
+    about: z.string(),
+    fees: z.string()
 })
 
 export const createServiceInput = z.object({
@@ -58,5 +64,10 @@ export const loginServiceInput = z.object({
 })
 
 export const updateServiceInput = z.object({
-    
+    name: z.string(),
+    address: z.string(),
+    start_time: z.string(),
+    end_time: z.string(),
+    about: z.string(),
+    price: z.string()
 })

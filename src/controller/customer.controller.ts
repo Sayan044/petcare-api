@@ -115,7 +115,12 @@ export async function updateProfileController(req: Request, res: Response) {
     }
 
     try {
-        const result = await updateCustomer(customerID, parsedData.data.name, parsedData.data.contact, filePath)
+        const result = await updateCustomer(
+            customerID,
+            parsedData.data.name,
+            parsedData.data.contact,
+            filePath
+        )
 
         res.status(200).json({ message: result })
     }

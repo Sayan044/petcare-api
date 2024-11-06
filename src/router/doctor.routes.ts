@@ -3,19 +3,25 @@ import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
 import { isAdmin } from '../middleware/verifyAdmin'
-import { getDoctorProfileController, loginDoctorController, registerDoctorController } from '../controller/doctor.controller'
+import { getDoctorProfileController, loginDoctorController, registerDoctorController, updateDoctorProfileController } from '../controller/doctor.controller'
 
 const router = Router()
 
-const uploadPath = path.join('uploads', 'DOCTOR')
+const uploadFolder = path.join('uploads', 'DOCTOR')
 
-if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true })
+if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder, { recursive: true })
 }
 
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
+            const { id } = req.query
+            const uploadPath = uploadFolder + `/${id}`
+
+            if (!fs.existsSync(uploadPath)) {
+                fs.mkdirSync(uploadPath, { recursive: true })
+            }
             cb(null, uploadPath)
         },
         filename: function (req, file, cb) {
@@ -26,6 +32,8 @@ const upload = multer({
 
 router.route('/').post(isAdmin, registerDoctorController)
 router.route('/login').post(loginDoctorController)
+
 router.route('/profile/:doctor_id').get(getDoctorProfileController)
+router.route('/profile/update').put(upload.single('photo'), updateDoctorProfileController)
 
 export { router as doctorRouter }

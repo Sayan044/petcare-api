@@ -1,11 +1,13 @@
 import CryptoJS from 'crypto-js'
+import path from 'node:path'
 import { Request, Response } from 'express'
-import { createServiceInput, loginServiceInput } from '../lib/types'
+import { createServiceInput, loginServiceInput, updateServiceInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
 import { CONFIG } from '../config'
 import { parseCategoryDomain } from '../utils/parse'
-import { createService, getServiceById, getServiceIdByEmail } from '../service/service.service'
+import { createService, getServiceById, getServiceIdByEmail, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
+import { deleteFile } from '../utils/deleteFile'
 
 export async function registerServiceController(req: Request, res: Response) {
     const parsedData = createServiceInput.safeParse(req.body)
@@ -84,6 +86,60 @@ export async function getServiceProfileController(req: Request, res: Response) {
         if (err instanceof APIError) {
             console.error("Error fetching profile: ", err.message)
             res.status(400).json({ message: err.message })
+        }
+    }
+}
+
+export async function updateServiceProfileController(req: Request, res: Response) {
+    const { id } = req.query
+
+    if (!req.file) {
+        res.status(400).send({
+            message: "No file uploaded."
+        })
+        return
+    }
+
+    const filePath = path.resolve(req.file.path)
+
+    if (!id) {
+        res.status(400).send({
+            message: "No ID provided."
+        })
+        deleteFile(filePath)
+        return
+    }
+
+    const parsedData = updateServiceInput.safeParse(req.body)
+    if (!parsedData.success) {
+        res.status(411).json({
+            message: "You've sent wrong inputs."
+        })
+        deleteFile(filePath)
+        return
+    }
+
+
+    try {
+        const result = await updateService(
+            id.toString(),
+            parsedData.data.name,
+            filePath,
+            parsedData.data.address,
+            parsedData.data.start_time,
+            parsedData.data.end_time,
+            parsedData.data.about,
+            parseFloat(parsedData.data.price)
+        )
+
+        res.status(200).json({ message: result })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error("Error updating profile: ", err.message)
+            res.status(400).json({ message: err.message })
+
+            deleteFile(filePath)
         }
     }
 }

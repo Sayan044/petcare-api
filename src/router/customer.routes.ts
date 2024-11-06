@@ -7,11 +7,17 @@ import { authMiddleware } from '../middleware/verifySession'
 
 const router = Router()
 
+const uploadFolder = path.join('uploads', 'CUSTOMER')
+
+if (!fs.existsSync(uploadFolder)) {
+    fs.mkdirSync(uploadFolder, { recursive: true })
+}
+
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
             //@ts-ignore
-            const uploadPath = path.join('uploads', req.customerID)
+            const uploadPath = uploadFolder + `/${req.customerID}`
 
             if (!fs.existsSync(uploadPath)) {
                 fs.mkdirSync(uploadPath, { recursive: true })

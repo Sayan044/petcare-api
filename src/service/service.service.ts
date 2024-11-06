@@ -69,3 +69,33 @@ export async function getServiceById(id: string): Promise<Pick<Service, 'name' |
 
     return service
 }
+
+export async function updateService(id: string, name: string, image: string, address: string, start_time: string, end_time: string, about: string, price: number): Promise<string> {
+    const service = await db.service.findFirst({
+        where: { id }
+    })
+
+    if (!service) {
+        throw new APIError("Service not found")
+    }
+
+    const updated_service = await db.service.update({
+        where: { id },
+        data: {
+            name,
+            image,
+            address,
+            start_time,
+            end_time,
+            about,
+            price,
+            status: 'VERIFIED'
+        }
+    })
+
+    if (!updated_service) {
+        throw new APIError("Profile updation failed")
+    }
+
+    return "Profile updated"
+}
