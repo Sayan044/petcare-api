@@ -78,3 +78,10 @@ export const createAppointmentInput = z.object({
     note: z.string().optional(),
     doctor_email: z.string()
 })
+
+export const createBookingInput = z.object({
+    date: z.string(),
+    time: z.string(),
+    note: z.string().optional(),
+    service_email: z.string()
+})
