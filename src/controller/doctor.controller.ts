@@ -3,7 +3,7 @@ import path from 'node:path'
 import { Request, Response } from 'express'
 import { createDoctorInput, loginDoctorInput, updateDoctorInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
-import { createDoctor, getDoctorByEmail, getDoctorById, getDoctorIdByEmail, getDoctors, updateDoctor } from '../service/doctor.service'
+import { createDoctor, getDoctorAppointmentsById, getDoctorByEmail, getDoctorById, getDoctorIdByEmail, getDoctors, updateDoctor } from '../service/doctor.service'
 import { CONFIG } from '../config'
 import { parseCategoryDomain } from '../utils/parse'
 import { sendMail } from '../lib/mail'
@@ -172,6 +172,22 @@ export async function getSpecificDoctorController(req: Request, res: Response) {
         if (err instanceof APIError) {
             console.error("Error fetching profile: ", err.message)
             res.status(400).json({ message: err.message })
+        }
+    }
+}
+
+export async function getDoctorAppointmentsController(req: Request, res: Response) {
+    const { doctor_id } = req.params
+
+    try {
+        const appointments = await getDoctorAppointmentsById(doctor_id.toString())
+
+        res.status(200).json({ data: appointments })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error("Error fetching appointments: ", err.message)
+            res.status(500).json({ message: err.message })
         }
     }
 }

@@ -141,3 +141,28 @@ export async function updateDoctor(id: string, name: string, image: string, addr
 
     return "Profile updated"
 }
+
+export async function getDoctorAppointmentsById(id: string): Promise<{ date: string; time: string; customer_name: string }[]> {
+    const doctor = await db.doctor.findFirst({
+        where: { id },
+        include: {
+            appointment: {
+                include: {
+                    customer: true
+                }
+            }
+        }
+    })
+
+    if (!doctor || !doctor.appointment) {
+        return []
+    }
+
+    const formattedAppointments = doctor.appointment.map((appointment) => ({
+        date: appointment.date,
+        time: appointment.time,
+        customer_name: appointment.customer.name
+    }))
+
+    return formattedAppointments
+}
