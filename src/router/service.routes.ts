@@ -3,7 +3,7 @@ import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
 import { isAdmin } from '../middleware/verifyAdmin'
-import { getServiceProfileController, getServicesByCategoryIdController, getSpecificServiceController, loginServiceController, registerServiceController, updateServiceProfileController } from '../controller/service.controller'
+import { getServiceBookingsController, getServiceProfileController, getServicesByCategoryIdController, getSpecificServiceController, loginServiceController, registerServiceController, updateServiceProfileController } from '../controller/service.controller'
 
 const router = Router()
 
@@ -38,5 +38,7 @@ router.route('/:service_email').get(getSpecificServiceController)
 
 router.route('/profile/:service_id').get(getServiceProfileController)
 router.route('/profile/update').put(upload.single('photo'), updateServiceProfileController)
+
+router.route('/bookings/:service_id').get(getServiceBookingsController)
 
 export { router as serviceRouter }

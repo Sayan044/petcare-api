@@ -141,3 +141,28 @@ export async function updateService(id: string, name: string, image: string, add
 
     return "Profile updated"
 }
+
+export async function getServiceBookingsById(id: string): Promise<{ date: string; time: string; customer_name: string }[]> {
+    const service = await db.service.findFirst({
+        where: { id },
+        include: {
+            booking: {
+                include: {
+                    customer: true
+                }
+            }
+        }
+    })
+
+    if (!service || !service.booking) {
+        return []
+    }
+
+    const formattedBookings = service.booking.map((booking) => ({
+        date: booking.date,
+        time: booking.time,
+        customer_name: booking.customer.name
+    }))
+
+    return formattedBookings
+}

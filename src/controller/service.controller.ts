@@ -5,7 +5,7 @@ import { createServiceInput, loginServiceInput, updateServiceInput } from '../li
 import { APIError, AppError } from '../lib/errors'
 import { CONFIG } from '../config'
 import { parseCategoryDomain } from '../utils/parse'
-import { createService, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
+import { createService, getServiceBookingsById, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
 
@@ -180,6 +180,22 @@ export async function getSpecificServiceController(req: Request, res: Response) 
         if (err instanceof APIError) {
             console.error("Error fetching profile: ", err.message)
             res.status(400).json({ message: err.message })
+        }
+    }
+}
+
+export async function getServiceBookingsController(req: Request, res: Response) {
+    const { service_id } = req.params
+
+    try {
+        const bookings = await getServiceBookingsById(service_id.toString())
+
+        res.status(200).json({ data: bookings })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error("Error fetching bookings: ", err.message)
+            res.status(500).json({ message: err.message })
         }
     }
 }
