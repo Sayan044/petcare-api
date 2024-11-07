@@ -50,8 +50,49 @@ export async function getServiceIdByEmail(email: string, password: string): Prom
 }
 
 export async function getServiceById(id: string): Promise<Pick<Service, 'name' | 'image' | 'address' | 'about' | 'start_time' | 'end_time' | 'price'>> {
-    const service = await db.service.findUnique({
+    const service = await db.service.findFirst({
         where: { id },
+        select: {
+            name: true,
+            image: true,
+            address: true,
+            about: true,
+            start_time: true,
+            end_time: true,
+            price: true
+        }
+    })
+
+    if (!service) {
+        throw new APIError("Service not found")
+    }
+
+    return service
+}
+
+export async function getServicesByCategoryId(category_id: string): Promise<Pick<Service, 'name' | 'image' | 'address' | 'email'>[]> {
+    const services = await db.service.findMany({
+        where: {
+            category_id
+        },
+        select: {
+            name: true,
+            email: true,
+            image: true,
+            address: true
+        }
+    })
+
+    if (!services) {
+        throw new APIError("DB error -> Services not found")
+    }
+
+    return services
+}
+
+export async function getServiceByEmail(email: string): Promise<Pick<Service, 'name' | 'image' | 'address' | 'about' | 'start_time' | 'end_time' | 'price'>> {
+    const service = await db.service.findUnique({
+        where: { email },
         select: {
             name: true,
             image: true,

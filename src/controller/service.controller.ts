@@ -5,7 +5,7 @@ import { createServiceInput, loginServiceInput, updateServiceInput } from '../li
 import { APIError, AppError } from '../lib/errors'
 import { CONFIG } from '../config'
 import { parseCategoryDomain } from '../utils/parse'
-import { createService, getServiceById, getServiceIdByEmail, updateService } from '../service/service.service'
+import { createService, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
 
@@ -140,6 +140,46 @@ export async function updateServiceProfileController(req: Request, res: Response
             res.status(400).json({ message: err.message })
 
             deleteFile(filePath)
+        }
+    }
+}
+
+export async function getServicesByCategoryIdController(req: Request, res: Response) {
+    const { category_id } = req.query
+
+    if (!category_id) {
+        res.status(400).send({
+            message: "No category_id provided."
+        })
+        return
+    }
+
+    try {
+        const services = await getServicesByCategoryId(category_id.toString())
+
+        res.status(200).json({ data: services })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error(err.message)
+
+            res.status(500).json({ message: "Failed to fetch services" })
+        }
+    }
+}
+
+export async function getSpecificServiceController(req: Request, res: Response) {
+    const { service_email } = req.params
+
+    try {
+        const service = await getServiceByEmail(service_email.toString())
+
+        res.status(200).json({ data: service })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error("Error fetching profile: ", err.message)
+            res.status(400).json({ message: err.message })
         }
     }
 }
