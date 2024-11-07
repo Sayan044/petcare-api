@@ -3,7 +3,7 @@ import path from 'node:path'
 import { Request, Response } from 'express'
 import { createDoctorInput, loginDoctorInput, updateDoctorInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
-import { createDoctor, getDoctorById, getDoctorIdByEmail, updateDoctor } from '../service/doctor.service'
+import { createDoctor, getDoctorByEmail, getDoctorById, getDoctorIdByEmail, getDoctors, updateDoctor } from '../service/doctor.service'
 import { CONFIG } from '../config'
 import { parseCategoryDomain } from '../utils/parse'
 import { sendMail } from '../lib/mail'
@@ -141,6 +141,37 @@ export async function updateDoctorProfileController(req: Request, res: Response)
             res.status(400).json({ message: err.message })
 
             deleteFile(filePath)
+        }
+    }
+}
+
+export async function getDoctorsController(req: Request, res: Response) {
+    try {
+        const doctors = await getDoctors()
+
+        res.status(200).json({ data: doctors })
+    }
+    catch (error) {
+        if (error instanceof APIError) {
+            console.error(error.message)
+
+            res.status(500).json({ message: "Failed to fetch doctors" })
+        }
+    }
+}
+
+export async function getSpecificDoctorController(req: Request, res: Response) {
+    const { doctor_email } = req.params
+
+    try {
+        const doctor = await getDoctorByEmail(doctor_email.toString())
+
+        res.status(200).json({ data: doctor })
+    }
+    catch (err) {
+        if (err instanceof APIError) {
+            console.error("Error fetching profile: ", err.message)
+            res.status(400).json({ message: err.message })
         }
     }
 }

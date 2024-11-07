@@ -3,7 +3,7 @@ import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
 import { isAdmin } from '../middleware/verifyAdmin'
-import { getDoctorProfileController, loginDoctorController, registerDoctorController, updateDoctorProfileController } from '../controller/doctor.controller'
+import { getDoctorProfileController, getDoctorsController, getSpecificDoctorController, loginDoctorController, registerDoctorController, updateDoctorProfileController } from '../controller/doctor.controller'
 
 const router = Router()
 
@@ -32,6 +32,9 @@ const upload = multer({
 
 router.route('/').post(isAdmin, registerDoctorController)
 router.route('/login').post(loginDoctorController)
+
+router.route('/').get(getDoctorsController)
+router.route('/:doctor_email').get(getSpecificDoctorController)
 
 router.route('/profile/:doctor_id').get(getDoctorProfileController)
 router.route('/profile/update').put(upload.single('photo'), updateDoctorProfileController)

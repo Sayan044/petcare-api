@@ -50,8 +50,47 @@ export async function getDoctorIdByEmail(email: string, password: string): Promi
 }
 
 export async function getDoctorById(id: string): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'about' | 'experience_yr' | 'start_time' | 'end_time' | 'fees'>> {
-    const doctor = await db.doctor.findUnique({
+    const doctor = await db.doctor.findFirst({
         where: { id },
+        select: {
+            name: true,
+            image: true,
+            address: true,
+            about: true,
+            experience_yr: true,
+            start_time: true,
+            end_time: true,
+            fees: true
+        }
+    })
+
+    if (!doctor) {
+        throw new APIError("Doctor not found")
+    }
+
+    return doctor
+}
+
+export async function getDoctors(): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'email'>[]> {
+    const doctor = await db.doctor.findMany({
+        select: {
+            name: true,
+            email: true,
+            image: true,
+            address: true,
+        }
+    })
+
+    if (!doctor) {
+        throw new APIError("DB error -> Doctor not found")
+    }
+
+    return doctor
+}
+
+export async function getDoctorByEmail(email: string): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'about' | 'experience_yr' | 'start_time' | 'end_time' | 'fees'>> {
+    const doctor = await db.doctor.findUnique({
+        where: { email },
         select: {
             name: true,
             image: true,
