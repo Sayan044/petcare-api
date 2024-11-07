@@ -73,7 +73,8 @@ export async function getServiceById(id: string): Promise<Pick<Service, 'name' |
 export async function getServicesByCategoryId(category_id: string): Promise<Pick<Service, 'name' | 'image' | 'address' | 'email'>[]> {
     const services = await db.service.findMany({
         where: {
-            category_id
+            category_id,
+            status: 'VERIFIED'
         },
         select: {
             name: true,

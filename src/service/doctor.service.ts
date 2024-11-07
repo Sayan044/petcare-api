@@ -73,6 +73,7 @@ export async function getDoctorById(id: string): Promise<Pick<Doctor, 'name' | '
 
 export async function getDoctors(): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'email'>[]> {
     const doctors = await db.doctor.findMany({
+        where: { status: 'VERIFIED' },
         select: {
             name: true,
             email: true,
