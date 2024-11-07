@@ -72,7 +72,7 @@ export async function getDoctorById(id: string): Promise<Pick<Doctor, 'name' | '
 }
 
 export async function getDoctors(): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'email'>[]> {
-    const doctor = await db.doctor.findMany({
+    const doctors = await db.doctor.findMany({
         select: {
             name: true,
             email: true,
@@ -81,11 +81,11 @@ export async function getDoctors(): Promise<Pick<Doctor, 'name' | 'image' | 'add
         }
     })
 
-    if (!doctor) {
+    if (!doctors) {
         throw new APIError("DB error -> Doctor not found")
     }
 
-    return doctor
+    return doctors
 }
 
 export async function getDoctorByEmail(email: string): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'about' | 'experience_yr' | 'start_time' | 'end_time' | 'fees'>> {
