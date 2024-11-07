@@ -1,4 +1,4 @@
-import z from 'zod'
+import z, { date } from 'zod'
 
 export const createCategoryInput = z.object({
     name: z.string()
@@ -70,4 +70,11 @@ export const updateServiceInput = z.object({
     end_time: z.string(),
     about: z.string(),
     price: z.string()
+})
+
+export const createAppointmentInput = z.object({
+    date: z.string(),
+    time: z.string(),
+    note: z.string().optional(),
+    doctor_email: z.string()
 })

@@ -88,25 +88,25 @@ enum Status {
 }
 
 model Appointment {
-  id          String   @id @default(uuid())
-  date        DateTime
-  time        String
-  note        String?
-  customer_id String
-  customer    Customer @relation(fields: [customer_id], references: [id])
-  doctor_email   String
-  doctor      Doctor   @relation(fields: [doctor_email], references: [email])
+  id           String   @id @default(uuid())
+  date         String
+  time         String
+  note         String?
+  customer_id  String
+  customer     Customer @relation(fields: [customer_id], references: [id])
+  doctor_email String
+  doctor       Doctor   @relation(fields: [doctor_email], references: [email])
 }
 
 model Booking {
-  id          String   @id @default(uuid())
-  date        DateTime
-  time        String
-  note        String?
-  customer_id String
-  customer    Customer @relation(fields: [customer_id], references: [id])
-  service_email  String
-  service     Service  @relation(fields: [service_email], references: [email])
+  id            String   @id @default(uuid())
+  date          String
+  time          String
+  note          String?
+  customer_id   String
+  customer      Customer @relation(fields: [customer_id], references: [id])
+  service_email String
+  service       Service  @relation(fields: [service_email], references: [email])
 }
 
 model Record {
