@@ -15,10 +15,31 @@ export async function createCategory(name: CategoryDomain, icon: string): Promis
     return category
 }
 
-export async function getCategories(): Promise<Category[]> {
+export async function getCategories(): Promise<{ id: string; name: string; icon: string; }[]> {
     const categories = await db.category.findMany()
 
     if (!categories) throw new AppError("Could not fetch categories")
 
-    return categories
+    return categories.map(category => ({
+        id: category.id,
+        name: mapCategoryDomainToString(category.name),
+        icon: category.icon,
+    }))
+}
+
+function mapCategoryDomainToString(domain: CategoryDomain): string {
+    switch (domain) {
+        case CategoryDomain.CAGING_SERVICE:
+            return "Caging Service"
+        case CategoryDomain.EVENT_SERVICE:
+            return "Event Service"
+        case CategoryDomain.SITTING_SERVICE:
+            return "Sitting Service"
+        case CategoryDomain.PET_GROOMING:
+            return "Pet Grooming"
+        case CategoryDomain.VET_DOCTOR:
+            return "Vet Doctor"
+        default:
+            return domain
+    }
 }
