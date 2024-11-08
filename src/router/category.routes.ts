@@ -4,10 +4,11 @@ import { isAdmin } from '../middleware/verifyAdmin'
 import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
+import { CONFIG } from '../config'
 
 const router = Router()
 
-const uploadPath = path.join('uploads', 'CATEGORY')
+const uploadPath = path.join(CONFIG.UPLOAD_PATH, 'CATEGORY')
 
 if (!fs.existsSync(uploadPath)) {
     fs.mkdirSync(uploadPath, { recursive: true })

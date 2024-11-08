@@ -4,10 +4,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { isAdmin } from '../middleware/verifyAdmin'
 import { getDoctorAppointmentsController, getDoctorProfileController, getDoctorsController, getSpecificDoctorController, loginDoctorController, registerDoctorController, updateDoctorProfileController } from '../controller/doctor.controller'
+import { CONFIG } from '../config'
 
 const router = Router()
 
-const uploadFolder = path.join('uploads', 'DOCTOR')
+const uploadFolder = path.join(CONFIG.UPLOAD_PATH, 'DOCTOR')
 
 if (!fs.existsSync(uploadFolder)) {
     fs.mkdirSync(uploadFolder, { recursive: true })
@@ -17,6 +18,8 @@ const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
             const { id } = req.query
+            if(!id) return
+
             const uploadPath = uploadFolder + `/${id}`
 
             if (!fs.existsSync(uploadPath)) {

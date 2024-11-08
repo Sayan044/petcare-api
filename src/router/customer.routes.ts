@@ -4,10 +4,11 @@ import path from 'node:path'
 import { Router } from 'express'
 import { createCustomerController, getProfileController, loginCustomerController, logoutController, updateProfileController } from '../controller/customer.controller'
 import { authMiddleware } from '../middleware/verifySession'
+import { CONFIG } from '../config'
 
 const router = Router()
 
-const uploadFolder = path.join('uploads', 'CUSTOMER')
+const uploadFolder = path.join(CONFIG.UPLOAD_PATH, 'CUSTOMER')
 
 if (!fs.existsSync(uploadFolder)) {
     fs.mkdirSync(uploadFolder, { recursive: true })
