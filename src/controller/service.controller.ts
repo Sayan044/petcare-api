@@ -4,7 +4,7 @@ import { Request, Response } from 'express'
 import { createServiceInput, loginServiceInput, updateServiceInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
 import { CONFIG } from '../config'
-import { parseCategoryDomain } from '../utils/parse'
+import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { createService, getServiceBookingsById, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
@@ -80,7 +80,12 @@ export async function getServiceProfileController(req: Request, res: Response) {
     try {
         const service_profile = await getServiceById(service_id.toString())
 
-        res.status(200).json({ data: service_profile })
+        const formattedServiceProfile = {
+            ...service_profile,
+            image: imageURL(service_profile.image)
+        }
+
+        res.status(200).json({ data: formattedServiceProfile })
     }
     catch (err) {
         if (err instanceof APIError) {
@@ -100,13 +105,13 @@ export async function updateServiceProfileController(req: Request, res: Response
         return
     }
 
-    const filePath = path.resolve(req.file.path)
+    const absolutePath = path.resolve(req.file.path)
 
     if (!id) {
         res.status(400).send({
             message: "No ID provided."
         })
-        deleteFile(filePath)
+        deleteFile(absolutePath)
         return
     }
 
@@ -115,10 +120,11 @@ export async function updateServiceProfileController(req: Request, res: Response
         res.status(411).json({
             message: "You've sent wrong inputs."
         })
-        deleteFile(filePath)
+        deleteFile(absolutePath)
         return
     }
 
+    const filePath = parseUploadPath(convertToLinuxPathStyle(req.file.path))
 
     try {
         const result = await updateService(
@@ -139,7 +145,7 @@ export async function updateServiceProfileController(req: Request, res: Response
             console.error("Error updating profile: ", err.message)
             res.status(400).json({ message: err.message })
 
-            deleteFile(filePath)
+            deleteFile(absolutePath)
         }
     }
 }
@@ -157,7 +163,12 @@ export async function getServicesByCategoryIdController(req: Request, res: Respo
     try {
         const services = await getServicesByCategoryId(category_id.toString())
 
-        res.status(200).json({ data: services })
+        const formattedServices = services.map((service) => ({
+            ...service,
+            image: imageURL(service.image)
+        }))
+
+        res.status(200).json({ data: formattedServices })
     }
     catch (err) {
         if (err instanceof APIError) {
@@ -174,7 +185,12 @@ export async function getSpecificServiceController(req: Request, res: Response) 
     try {
         const service = await getServiceByEmail(service_email.toString())
 
-        res.status(200).json({ data: service })
+        const formattedService = {
+            ...service,
+            image: imageURL(service.image)
+        }
+
+        res.status(200).json({ data: formattedService })
     }
     catch (err) {
         if (err instanceof APIError) {

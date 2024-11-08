@@ -5,7 +5,7 @@ import { createDoctorInput, loginDoctorInput, updateDoctorInput } from '../lib/t
 import { APIError, AppError } from '../lib/errors'
 import { createDoctor, getDoctorAppointmentsById, getDoctorByEmail, getDoctorById, getDoctorIdByEmail, getDoctors, updateDoctor } from '../service/doctor.service'
 import { CONFIG } from '../config'
-import { parseCategoryDomain } from '../utils/parse'
+import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
 
@@ -80,7 +80,12 @@ export async function getDoctorProfileController(req: Request, res: Response) {
     try {
         const doctor_profile = await getDoctorById(doctor_id.toString())
 
-        res.status(200).json({ data: doctor_profile })
+        const formattedDoctorProfile = {
+            ...doctor_profile,
+            image: imageURL(doctor_profile.image)
+        }
+
+        res.status(200).json({ data: formattedDoctorProfile })
     }
     catch (err) {
         if (err instanceof APIError) {
@@ -100,13 +105,13 @@ export async function updateDoctorProfileController(req: Request, res: Response)
         return
     }
 
-    const filePath = path.resolve(req.file.path)
+    const absolutePath = path.resolve(req.file.path)
 
     if (!id) {
         res.status(400).send({
             message: "No ID provided."
         })
-        deleteFile(filePath)
+        deleteFile(absolutePath)
         return
     }
 
@@ -115,10 +120,11 @@ export async function updateDoctorProfileController(req: Request, res: Response)
         res.status(411).json({
             message: "You've sent wrong inputs."
         })
-        deleteFile(filePath)
+        deleteFile(absolutePath)
         return
     }
 
+    const filePath = parseUploadPath(convertToLinuxPathStyle(req.file.path))
 
     try {
         const result = await updateDoctor(
@@ -140,7 +146,7 @@ export async function updateDoctorProfileController(req: Request, res: Response)
             console.error("Error updating profile: ", err.message)
             res.status(400).json({ message: err.message })
 
-            deleteFile(filePath)
+            deleteFile(absolutePath)
         }
     }
 }
@@ -149,7 +155,12 @@ export async function getDoctorsController(req: Request, res: Response) {
     try {
         const doctors = await getDoctors()
 
-        res.status(200).json({ data: doctors })
+        const formattedDoctors = doctors.map((doctor) => ({
+            ...doctor,
+            image: imageURL(doctor.image)
+        }))
+
+        res.status(200).json({ data: formattedDoctors })
     }
     catch (error) {
         if (error instanceof APIError) {
@@ -166,7 +177,12 @@ export async function getSpecificDoctorController(req: Request, res: Response) {
     try {
         const doctor = await getDoctorByEmail(doctor_email.toString())
 
-        res.status(200).json({ data: doctor })
+        const formattedDoctor = {
+            ...doctor,
+            image: imageURL(doctor.image)
+        }
+
+        res.status(200).json({ data: formattedDoctor })
     }
     catch (err) {
         if (err instanceof APIError) {

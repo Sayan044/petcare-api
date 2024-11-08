@@ -13,7 +13,7 @@ model Customer {
   password    String
   name        String
   contact     String?
-  photoUrl    String?
+  image       String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   appointment Appointment[]

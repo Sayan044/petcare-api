@@ -46,14 +46,14 @@ export async function getCustomerIdByEmail(email: string, password: string): Pro
     throw new AppError("Internal server error")
 }
 
-export async function getCustomerById(id: string): Promise<Pick<Customer, 'email' | 'name' | 'contact' | 'photoUrl'>> {
+export async function getCustomerById(id: string): Promise<Pick<Customer, 'email' | 'name' | 'contact' | 'image'>> {
     const customer = await db.customer.findFirst({
         where: { id },
         select: {
             email: true,
             name: true,
             contact: true,
-            photoUrl: true
+            image: true
         }
     })
 
@@ -64,7 +64,7 @@ export async function getCustomerById(id: string): Promise<Pick<Customer, 'email
     return customer
 }
 
-export async function updateCustomer(id: string, name: string, contact: string | null, photoUrl: string | null): Promise<string> {
+export async function updateCustomer(id: string, name: string, contact: string | null, image: string | null): Promise<string> {
     const customer = await db.customer.findFirst({
         where: { id }
     })
@@ -78,7 +78,7 @@ export async function updateCustomer(id: string, name: string, contact: string |
         data: {
             name,
             contact,
-            photoUrl
+            image
         }
     })
 

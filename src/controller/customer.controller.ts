@@ -7,6 +7,7 @@ import { createCustomer, getCustomerById, getCustomerIdByEmail, updateCustomer }
 import { CONFIG } from '../config'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
+import { convertToLinuxPathStyle, imageURL, parseUploadPath } from '../utils/parse'
 
 export async function createCustomerController(req: Request, res: Response) {
     const parsedData = createCustomerInput.safeParse(req.body)
@@ -87,7 +88,12 @@ export async function getProfileController(req: Request, res: Response) {
     try {
         const customer_profile = await getCustomerById(customerID)
 
-        res.status(200).json({ data: customer_profile })
+        const formattedCustomerProfile = {
+            ...customer_profile,
+            image: imageURL(customer_profile.image)
+        }
+
+        res.status(200).json({ data: formattedCustomerProfile })
     }
     catch (err) {
         if (err instanceof APIError) {
@@ -101,17 +107,22 @@ export async function updateProfileController(req: Request, res: Response) {
     //@ts-ignore
     const customerID = req.customerID
 
+    let filePath = null
+    let absolutePath = null
+    if (req.file) {
+        absolutePath = path.resolve(req.file.path)
+        filePath = parseUploadPath(convertToLinuxPathStyle(req.file.path))
+    }
+
     const parsedData = updateProfileInput.safeParse(req.body)
     if (!parsedData.success) {
         res.status(411).json({
             message: "You've sent wrong inputs."
         })
+        if (absolutePath) {
+            deleteFile(absolutePath)
+        }
         return
-    }
-
-    let filePath = null
-    if (req.file) {
-        filePath = path.resolve(req.file.path)
     }
 
     try {
@@ -129,8 +140,8 @@ export async function updateProfileController(req: Request, res: Response) {
             console.error("Error updating profile: ", err.message)
             res.status(400).json({ message: err.message })
 
-            if (filePath) {
-                deleteFile(filePath)
+            if (absolutePath) {
+                deleteFile(absolutePath)
             }
         }
     }

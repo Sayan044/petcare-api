@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session'
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import { createServer } from 'node:http'
+import path from 'node:path'
 import { CONFIG } from './config'
 import { appointmentRouter, authRouter, bookingRouter, categoryRouter, customerRouter, doctorRouter, recordRouter, serviceRouter } from './router'
 
@@ -30,6 +31,8 @@ app.use(express.json())
 app.use(morgan('tiny'))
 
 const router = express.Router()
+
+router.use('/uploads', express.static(path.resolve(CONFIG.UPLOAD_PATH)))
 
 router.use('/auth', authRouter)
 router.use('/appointment', appointmentRouter)

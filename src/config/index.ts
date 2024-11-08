@@ -11,5 +11,7 @@ export const CONFIG = {
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
     PASSWORD_SECRET: process.env.PASSWORD_SECRET as string,
     COOKIE_SECRET: process.env.COOKIE_SECRET as string,
-    JWT_SECRET: process.env.JWT_SECRET as string
+    JWT_SECRET: process.env.JWT_SECRET as string,
+    UPLOAD_PATH: process.env.UPLOAD_PATH as string,
+    SERVER_URL: process.env.SERVER_URL as string
 }
