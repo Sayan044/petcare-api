@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -33,6 +33,20 @@ const upload = multer({
     })
 })
 
+function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
+    upload.single('photo')(req, res, (err) => {
+        if (err) {
+            console.log("MULTER ERROR -> ", err.message)
+            return res.status(500).json({ error: "Failed to upload" })
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" })
+        }
+        next()
+    })
+}
+
 router.route('/').post(isAdmin, registerServiceController)
 router.route('/login').post(loginServiceController)
 
@@ -40,7 +54,7 @@ router.route('/').get(getServicesByCategoryIdController)
 router.route('/:service_email').get(getSpecificServiceController)
 
 router.route('/profile/:service_id').get(getServiceProfileController)
-router.route('/profile/update').put(upload.single('photo'), updateServiceProfileController)
+router.route('/profile/update').put(uploadMiddleware, updateServiceProfileController)
 
 router.route('/bookings/:service_id').get(getServiceBookingsController)
 

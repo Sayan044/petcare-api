@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import { createCategoryController, getCategoryController } from '../controller/category.controller'
 import { isAdmin } from '../middleware/verifyAdmin'
 import multer from 'multer'
@@ -25,7 +25,21 @@ const upload = multer({
     })
 })
 
-router.route('/').post(isAdmin, upload.single('icon'), createCategoryController)
+function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
+    upload.single('icon')(req, res, (err) => {
+        if (err) {
+            console.log("MULTER ERROR -> ", err.message)
+            return res.status(500).json({ error: "Failed to upload" })
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" })
+        }
+        next()
+    })
+}
+
+router.route('/').post(isAdmin, uploadMiddleware, createCategoryController)
 router.route('/').get(getCategoryController)
 
 export { router as categoryRouter }

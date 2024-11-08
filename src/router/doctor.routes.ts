@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import multer from 'multer'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -33,6 +33,20 @@ const upload = multer({
     })
 })
 
+function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
+    upload.single('photo')(req, res, (err) => {
+        if (err) {
+            console.log("MULTER ERROR -> ", err.message)
+            return res.status(500).json({ error: "Failed to upload" })
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" })
+        }
+        next()
+    })
+}
+
 router.route('/').post(isAdmin, registerDoctorController)
 router.route('/login').post(loginDoctorController)
 
@@ -40,7 +54,7 @@ router.route('/').get(getDoctorsController)
 router.route('/:doctor_email').get(getSpecificDoctorController)
 
 router.route('/profile/:doctor_id').get(getDoctorProfileController)
-router.route('/profile/update').put(upload.single('photo'), updateDoctorProfileController)
+router.route('/profile/update').put(uploadMiddleware, updateDoctorProfileController)
 
 router.route('/appointments/:doctor_id').get(getDoctorAppointmentsController)
 

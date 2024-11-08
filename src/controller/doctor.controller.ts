@@ -98,13 +98,7 @@ export async function getDoctorProfileController(req: Request, res: Response) {
 export async function updateDoctorProfileController(req: Request, res: Response) {
     const { id } = req.query
 
-    if (!req.file) {
-        res.status(400).send({
-            message: "No file uploaded."
-        })
-        return
-    }
-
+    //@ts-ignore
     const absolutePath = path.resolve(req.file.path)
 
     if (!id) {
@@ -124,6 +118,7 @@ export async function updateDoctorProfileController(req: Request, res: Response)
         return
     }
 
+    //@ts-ignore
     const filePath = parseUploadPath(convertToLinuxPathStyle(req.file.path))
 
     try {

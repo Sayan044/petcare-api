@@ -7,13 +7,7 @@ import { deleteFile } from '../utils/deleteFile'
 import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 
 export async function createCategoryController(req: Request, res: Response) {
-    if (!req.file) {
-        res.status(400).send({
-            message: "No file uploaded."
-        })
-        return
-    }
-
+    //@ts-ignore
     const absolutePath = path.resolve(req.file.path)
 
     const parsedData = createCategoryInput.safeParse(req.body)
@@ -34,6 +28,7 @@ export async function createCategoryController(req: Request, res: Response) {
         return
     }
 
+    //@ts-ignore
     const filePath = parseUploadPath(convertToLinuxPathStyle(req.file.path))
 
     try {

@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import multer from 'multer'
 import path from 'node:path'
-import { Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import { createCustomerController, getProfileController, loginCustomerController, logoutController, updateProfileController } from '../controller/customer.controller'
 import { authMiddleware } from '../middleware/verifySession'
 import { CONFIG } from '../config'
@@ -31,11 +31,25 @@ const upload = multer({
     })
 })
 
+function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
+    upload.single('photo')(req, res, (err) => {
+        if (err) {
+            console.log("MULTER ERROR -> ", err.message)
+            return res.status(500).json({ error: "Failed to upload" })
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" })
+        }
+        next()
+    })
+}
+
 router.route('/').post(createCustomerController)
 router.route('/login').post(loginCustomerController)
 router.route('/logout').get(logoutController)
 
 router.route('/profile').get(authMiddleware, getProfileController)
-router.route('/profile/update').put(authMiddleware, upload.single('photo'), updateProfileController)
+router.route('/profile/update').put(authMiddleware, uploadMiddleware, updateProfileController)
 
 export { router as customerRouter }
