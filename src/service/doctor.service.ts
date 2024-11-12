@@ -91,7 +91,10 @@ export async function getDoctors(): Promise<Pick<Doctor, 'name' | 'image' | 'add
 
 export async function getDoctorByEmail(email: string): Promise<Pick<Doctor, 'name' | 'image' | 'address' | 'about' | 'experience_yr' | 'start_time' | 'end_time' | 'fees'>> {
     const doctor = await db.doctor.findUnique({
-        where: { email },
+        where: {
+            email,
+            status: 'VERIFIED'
+        },
         select: {
             name: true,
             image: true,
@@ -100,7 +103,13 @@ export async function getDoctorByEmail(email: string): Promise<Pick<Doctor, 'nam
             experience_yr: true,
             start_time: true,
             end_time: true,
-            fees: true
+            fees: true,
+            appointment: {
+                select: {
+                    date: true,
+                    time: true
+                }
+            }
         }
     })
 

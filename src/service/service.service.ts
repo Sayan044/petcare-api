@@ -93,7 +93,10 @@ export async function getServicesByCategoryId(category_id: string): Promise<Pick
 
 export async function getServiceByEmail(email: string): Promise<Pick<Service, 'name' | 'image' | 'address' | 'about' | 'start_time' | 'end_time' | 'price'>> {
     const service = await db.service.findUnique({
-        where: { email },
+        where: {
+            email,
+            status: 'VERIFIED'
+        },
         select: {
             name: true,
             image: true,
@@ -101,7 +104,13 @@ export async function getServiceByEmail(email: string): Promise<Pick<Service, 'n
             about: true,
             start_time: true,
             end_time: true,
-            price: true
+            price: true,
+            booking: {
+                select: {
+                    date: true,
+                    time: true
+                }
+            }
         }
     })
 
