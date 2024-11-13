@@ -26,7 +26,7 @@ model Customer {
 model Category {
   id      String         @id @default(uuid())
   name    CategoryDomain @unique
-  icon    String // URL
+  icon    String
   doctor  Doctor[]
   service Service[]
 }
@@ -43,8 +43,8 @@ model Doctor {
   id            String        @id @default(uuid())
   email         String        @unique
   password      String
-  name          String
-  image         String? // URL
+  name          String?
+  image         String?
   address       String?
   experience_yr Int?
   start_time    String?
@@ -65,8 +65,8 @@ model Service {
   id          String    @id @default(uuid())
   email       String    @unique
   password    String
-  name        String
-  image       String? // URL
+  name        String?
+  image       String?
   address     String?
   start_time  String?
   end_time    String?
@@ -114,8 +114,8 @@ model Record {
   type              DogBreed
   pet_name          String
   medical_history   String
-  document_link     String[] // URL
-  pet_documents     String[] // URL
+  document_link     String[]
+  pet_documents     String[]
   symptom           Symptom
   last_vaccination  DateTime
   next_vaccination  DateTime

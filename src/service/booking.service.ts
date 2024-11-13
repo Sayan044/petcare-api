@@ -37,5 +37,6 @@ export async function createBooking(date: string, time: string, note: string | u
         throw new APIError("Failed creating appoinment")
     }
 
+    //@ts-ignore
     return booking
 }

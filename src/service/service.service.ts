@@ -4,7 +4,7 @@ import { db } from "../config/prisma.config";
 import { APIError, AppError } from "../lib/errors";
 import { CONFIG } from '../config';
 
-export async function createService(email: string, password: string, name: string, category_name: CategoryDomain): Promise<Service> {
+export async function createService(email: string, password: string, category_name: CategoryDomain): Promise<Service> {
     const category = await db.category.findUnique({
         where: {
             name: category_name
@@ -17,7 +17,6 @@ export async function createService(email: string, password: string, name: strin
         data: {
             email,
             password,
-            name,
             category_id: category.id
         }
     })

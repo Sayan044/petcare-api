@@ -30,7 +30,6 @@ export async function registerDoctorController(req: Request, res: Response) {
         const doctor = await createDoctor(
             parsedData.data.email,
             CryptoJS.AES.encrypt(parsedData.data.password, CONFIG.PASSWORD_SECRET).toString(),
-            parsedData.data.name,
             categoryDomain
         )
         console.log("DOCTOR CREATED -> ", doctor)

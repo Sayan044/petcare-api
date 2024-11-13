@@ -30,7 +30,6 @@ export async function registerServiceController(req: Request, res: Response) {
         const service = await createService(
             parsedData.data.email,
             CryptoJS.AES.encrypt(parsedData.data.password, CONFIG.PASSWORD_SECRET).toString(),
-            parsedData.data.name,
             categoryDomain
         )
         console.log("SERVICE CREATED -> ", service)

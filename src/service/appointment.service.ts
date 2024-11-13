@@ -37,5 +37,6 @@ export async function createAppointment(date: string, time: string, note: string
         throw new APIError("Failed creating appoinment")
     }
 
+    //@ts-ignore
     return appointment
 }

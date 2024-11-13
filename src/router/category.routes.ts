@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express'
-import { createCategoryController, getCategoryController } from '../controller/category.controller'
+import { createCategoryController, getCategoryController, getCategoryTypesController } from '../controller/category.controller'
 import { isAdmin } from '../middleware/verifyAdmin'
 import multer from 'multer'
 import fs from 'node:fs'
@@ -41,5 +41,6 @@ function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
 
 router.route('/').post(isAdmin, uploadMiddleware, createCategoryController)
 router.route('/').get(getCategoryController)
+router.route('/types').get(isAdmin, getCategoryTypesController)
 
 export { router as categoryRouter }

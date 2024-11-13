@@ -32,7 +32,6 @@ export const updateProfileInput = z.object({
 export const createDoctorInput = z.object({
     email: z.string().email(),
     password: z.string(),
-    name: z.string(),
     category_name: z.string()
 })
 
@@ -54,7 +53,6 @@ export const updateDoctorInput = z.object({
 export const createServiceInput = z.object({
     email: z.string().email(),
     password: z.string(),
-    name: z.string(),
     category_name: z.string()
 })
 

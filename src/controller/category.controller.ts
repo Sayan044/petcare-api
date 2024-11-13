@@ -5,6 +5,7 @@ import { createCategory, getCategories } from '../service/category.service'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
 import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
+import { CategoryDomain } from '@prisma/client'
 
 export async function createCategoryController(req: Request, res: Response) {
     //@ts-ignore
@@ -63,5 +64,16 @@ export async function getCategoryController(req: Request, res: Response) {
 
             res.status(500).json({ message: "Failed to fetch categories" })
         }
+    }
+}
+
+export async function getCategoryTypesController(req: Request, res: Response) {
+    try {
+        const types = Object.keys(CategoryDomain)
+
+        res.status(200).json({ data: types })
+    }
+    catch (err) {
+        res.status(500).json({ message: "Failed to fetch categories" })
     }
 }
