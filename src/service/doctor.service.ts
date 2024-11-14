@@ -102,13 +102,7 @@ export async function getDoctorByEmail(email: string): Promise<Pick<Doctor, 'nam
             experience_yr: true,
             start_time: true,
             end_time: true,
-            fees: true,
-            appointment: {
-                select: {
-                    date: true,
-                    time: true
-                }
-            }
+            fees: true
         }
     })
 

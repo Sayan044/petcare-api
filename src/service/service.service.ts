@@ -103,13 +103,7 @@ export async function getServiceByEmail(email: string): Promise<Pick<Service, 'n
             about: true,
             start_time: true,
             end_time: true,
-            price: true,
-            booking: {
-                select: {
-                    date: true,
-                    time: true
-                }
-            }
+            price: true
         }
     })
 

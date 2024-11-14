@@ -22,7 +22,7 @@ export async function createAppointment(date: string, time: string, note: string
                 time,
                 note,
                 customer_id,
-                doctor_email
+                doctor_id: doctor.id
             }
         })
 

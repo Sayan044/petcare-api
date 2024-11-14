@@ -22,7 +22,7 @@ export async function createBooking(date: string, time: string, note: string | u
                 time,
                 note,
                 customer_id,
-                service_email
+                service_id: service.id
             }
         })
 

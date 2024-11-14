@@ -94,8 +94,8 @@ model Appointment {
   note         String?
   customer_id  String
   customer     Customer @relation(fields: [customer_id], references: [id])
-  doctor_email String
-  doctor       Doctor   @relation(fields: [doctor_email], references: [email])
+  doctor_id String
+  doctor       Doctor   @relation(fields: [doctor_id], references: [id])
 }
 
 model Booking {
@@ -105,8 +105,8 @@ model Booking {
   note          String?
   customer_id   String
   customer      Customer @relation(fields: [customer_id], references: [id])
-  service_email String
-  service       Service  @relation(fields: [service_email], references: [email])
+  service_id String
+  service       Service  @relation(fields: [service_id], references: [id])
 }
 
 model Record {
