@@ -161,7 +161,7 @@ export async function getServiceBookingsById(id: string): Promise<{ date: string
     }
 
     const formattedBookings = service.booking.map((booking) => ({
-        date: booking.date,
+        date: booking.date.toDateString(),
         time: booking.time,
         customer_name: booking.customer.name
     }))

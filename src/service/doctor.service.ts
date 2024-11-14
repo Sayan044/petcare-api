@@ -161,7 +161,7 @@ export async function getDoctorAppointmentsById(id: string): Promise<{ date: str
     }
 
     const formattedAppointments = doctor.appointment.map((appointment) => ({
-        date: appointment.date,
+        date: appointment.date.toDateString(),
         time: appointment.time,
         customer_name: appointment.customer.name
     }))

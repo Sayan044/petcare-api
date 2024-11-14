@@ -89,24 +89,30 @@ enum Status {
 
 model Appointment {
   id           String   @id @default(uuid())
-  date         String
+  date         DateTime
   time         String
   note         String?
   customer_id  String
   customer     Customer @relation(fields: [customer_id], references: [id])
   doctor_id String
   doctor       Doctor   @relation(fields: [doctor_id], references: [id])
+
+  @@index([doctor_id])
+  @@index([date])
 }
 
 model Booking {
   id            String   @id @default(uuid())
-  date          String
+  date          DateTime
   time          String
   note          String?
   customer_id   String
   customer      Customer @relation(fields: [customer_id], references: [id])
   service_id String
   service       Service  @relation(fields: [service_id], references: [id])
+
+  @@index([service_id])
+  @@index([date])
 }
 
 model Record {
