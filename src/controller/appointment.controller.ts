@@ -34,7 +34,7 @@ export async function makeAppointmentController(req: Request, res: Response) {
             {
                 name: result.customer_name,
                 email: result.customer_email,
-                date: appointmentDate.toDateString(),
+                date: appointmentDate.toLocaleDateString('en-IN'),
                 time,
                 doctorName: result.doctor_name
             },

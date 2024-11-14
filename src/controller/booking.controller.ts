@@ -34,7 +34,7 @@ export async function makeBookingController(req: Request, res: Response) {
             {
                 name: result.customer_name,
                 email: result.customer_email,
-                date: bookingDate.toDateString(),
+                date: bookingDate.toLocaleDateString('en-IN'),
                 time,
                 serviceName: result.service_name
             },
