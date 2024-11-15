@@ -8,6 +8,7 @@ import { CONFIG } from '../config'
 import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
+import { decrypt, encrypt } from '../utils/encrypt-decrypt'
 
 export async function registerDoctorController(req: Request, res: Response) {
     const parsedData = createDoctorInput.safeParse(req.body)
@@ -151,6 +152,7 @@ export async function getDoctorsController(req: Request, res: Response) {
 
         const formattedDoctors = doctors.map((doctor) => ({
             ...doctor,
+            email: encrypt(doctor.email),
             image: imageURL(doctor.image)
         }))
 
@@ -169,7 +171,7 @@ export async function getSpecificDoctorController(req: Request, res: Response) {
     const { doctor_email } = req.params
 
     try {
-        const doctor = await getDoctorByEmail(doctor_email.toString())
+        const doctor = await getDoctorByEmail(decrypt(doctor_email))
 
         const formattedDoctor = {
             ...doctor,

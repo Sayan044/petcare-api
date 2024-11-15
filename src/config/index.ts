@@ -13,5 +13,6 @@ export const CONFIG = {
     COOKIE_SECRET: process.env.COOKIE_SECRET as string,
     JWT_SECRET: process.env.JWT_SECRET as string,
     UPLOAD_PATH: process.env.UPLOAD_PATH as string,
-    SERVER_URL: process.env.SERVER_URL as string
+    SERVER_URL: process.env.SERVER_URL as string,
+    ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET as string
 }

@@ -8,6 +8,7 @@ import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath
 import { createService, getServiceBookingsById, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
+import { decrypt, encrypt } from '../utils/encrypt-decrypt'
 
 export async function registerServiceController(req: Request, res: Response) {
     const parsedData = createServiceInput.safeParse(req.body)
@@ -159,6 +160,7 @@ export async function getServicesByCategoryIdController(req: Request, res: Respo
 
         const formattedServices = services.map((service) => ({
             ...service,
+            email: encrypt(service.email),
             image: imageURL(service.image)
         }))
 
@@ -177,7 +179,7 @@ export async function getSpecificServiceController(req: Request, res: Response) 
     const { service_email } = req.params
 
     try {
-        const service = await getServiceByEmail(service_email.toString())
+        const service = await getServiceByEmail(decrypt(service_email))
 
         const formattedService = {
             ...service,

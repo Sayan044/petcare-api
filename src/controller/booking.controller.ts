@@ -3,6 +3,7 @@ import { createBookingInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
 import { createBooking, getBookedServicesFromCurrentDate } from '../service/booking.service'
 import { sendMail } from '../lib/mail'
+import { decrypt } from '../utils/encrypt-decrypt'
 
 export async function makeBookingController(req: Request, res: Response) {
     // @ts-ignore
@@ -25,10 +26,10 @@ export async function makeBookingController(req: Request, res: Response) {
         return
     }
 
-    const { time, note, service_email } = parsedData.data
+    let { time, note, service_email } = parsedData.data
 
     try {
-        const result = await createBooking(bookingDate, time, note, customerID, service_email)
+        const result = await createBooking(bookingDate, time, note, customerID, decrypt(service_email))
 
         sendMail(
             {
@@ -73,7 +74,7 @@ export async function bookedServicesController(req: Request, res: Response) {
     }
 
     try {
-        const bookings = await getBookedServicesFromCurrentDate(service_email.toString(), queryDate)
+        const bookings = await getBookedServicesFromCurrentDate(decrypt(service_email), queryDate)
 
         res.status(200).json({ data: bookings })
     }

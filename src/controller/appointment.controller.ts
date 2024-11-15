@@ -3,6 +3,7 @@ import { createAppointmentInput } from '../lib/types'
 import { createAppointment, getBookedAppointmentsFromCurrentDate } from '../service/appointment.service'
 import { sendMail } from '../lib/mail'
 import { APIError, AppError } from '../lib/errors'
+import { decrypt } from '../utils/encrypt-decrypt'
 
 export async function makeAppointmentController(req: Request, res: Response) {
     // @ts-ignore
@@ -28,7 +29,7 @@ export async function makeAppointmentController(req: Request, res: Response) {
     const { time, note, doctor_email } = parsedData.data
 
     try {
-        const result = await createAppointment(appointmentDate, time, note, customerID, doctor_email)
+        const result = await createAppointment(appointmentDate, time, note, customerID, decrypt(doctor_email))
 
         sendMail(
             {
@@ -73,7 +74,7 @@ export async function bookedAppointmentsController(req: Request, res: Response) 
     }
 
     try {
-        const appointments = await getBookedAppointmentsFromCurrentDate(doctor_email.toString(), queryDate)
+        const appointments = await getBookedAppointmentsFromCurrentDate(decrypt(doctor_email), queryDate)
 
         res.status(200).json({ data: appointments })
     }

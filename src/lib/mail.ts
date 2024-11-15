@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import nodemailer from 'nodemailer'
 import { CONFIG } from '../config'
-import { AppError } from './errors'
+import { APIError, AppError } from './errors'
 
 
 const transporter = nodemailer.createTransport({
@@ -113,6 +113,9 @@ export function sendMail(data: any, isAppointment = false, isService = false, is
             console.log(res)
         })
         .catch((error) => {
+            if (error.responseCode === 550) {
+                throw new APIError("Email address does not exist")
+            }
             throw new AppError(error.message)
         })
 }

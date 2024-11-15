@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import otpGenerator from 'otp-generator'
 import { generareOTPInput, veirfyOTPInput } from '../lib/types'
 import { sendMail } from '../lib/mail'
-import { AppError } from '../lib/errors'
+import { APIError, AppError } from '../lib/errors'
 
 export async function generateOTP(req: Request, res: Response) {
     const parsedData = generareOTPInput.safeParse(req.query)
@@ -35,9 +35,12 @@ export async function generateOTP(req: Request, res: Response) {
         })
     }
     catch (err) {
+        if (err instanceof APIError) {
+            res.status(400).json({ message: err.message })
+        }
         if (err instanceof AppError) {
             console.log("SENDMAIL ERROR -> ", err.message)
-            res.status(400).json({ message: err.message })
+            res.status(500).json({ message: "Faild to send OTP" })
         }
     }
 
