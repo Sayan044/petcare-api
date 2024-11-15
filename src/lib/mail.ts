@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import nodemailer from 'nodemailer'
 import { CONFIG } from '../config'
+import { AppError } from './errors'
 
 
 const transporter = nodemailer.createTransport({
@@ -112,6 +113,6 @@ export function sendMail(data: any, isAppointment = false, isService = false, is
             console.log(res)
         })
         .catch((error) => {
-            console.log(error)
+            throw new AppError(error.message)
         })
 }

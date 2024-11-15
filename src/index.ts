@@ -12,7 +12,7 @@ const app: Application = express()
 const httpServer = createServer(app)
 
 app.use(cors({
-    origin: '*',
+    origin: CONFIG.FRONTEND_URL,
     credentials: true
 }))
 app.use(cookieSession({
@@ -28,7 +28,7 @@ app.use(compression({
     level: 6
 }))
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan('common'))
 
 const router = express.Router()
 

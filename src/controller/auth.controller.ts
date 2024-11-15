@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import otpGenerator from 'otp-generator'
 import { generareOTPInput, veirfyOTPInput } from '../lib/types'
 import { sendMail } from '../lib/mail'
+import { AppError } from '../lib/errors'
 
 export async function generateOTP(req: Request, res: Response) {
     const parsedData = generareOTPInput.safeParse(req.query)
@@ -26,11 +27,20 @@ export async function generateOTP(req: Request, res: Response) {
 
     console.log(`OTP for ${parsedData.data.email} -> ${otp}`)
 
-    sendMail({ email: parsedData.data.email, otp }, undefined, undefined, undefined, true)
+    try {
+        sendMail({ email: parsedData.data.email, otp }, undefined, undefined, undefined, true)
 
-    res.status(200).json({
-        message: 'OTP has been sent to your email'
-    })
+        res.status(200).json({
+            message: 'OTP has been sent to your email'
+        })
+    }
+    catch (err) {
+        if (err instanceof AppError) {
+            console.log("SENDMAIL ERROR -> ", err.message)
+            res.status(400).json({ message: err.message })
+        }
+    }
+
 }
 
 export async function verifyOTP(req: Request, res: Response) {

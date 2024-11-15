@@ -37,7 +37,8 @@ export async function createCustomerController(req: Request, res: Response) {
     catch (err) {
         if (err instanceof APIError) {
             console.error("Error creating customer: ", err.message)
-            res.status(500).json({ message: "Failed to register" })
+
+            res.status(500).json({ message: err.message })
         }
     }
 }

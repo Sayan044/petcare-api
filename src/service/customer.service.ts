@@ -9,7 +9,7 @@ export async function createCustomer(name: string, email: string, password: stri
         where: { email }
     })
 
-    if (existingCustomer) return
+    if (existingCustomer) throw new APIError("Email already exists")
 
     const customer = await db.customer.create({
         data: {
@@ -19,7 +19,7 @@ export async function createCustomer(name: string, email: string, password: stri
         }
     })
 
-    if (!customer) throw new APIError("Failed creating customer")
+    if (!customer) throw new APIError("Failed to register")
 
     return customer
 }

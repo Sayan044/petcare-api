@@ -62,7 +62,7 @@ export async function getBookedServicesFromCurrentDate(service_email: string, da
     })
 
     if (!bookings) {
-        throw new AppError("Doctor not found")
+        throw new AppError("Service not found")
     }
 
     return bookings.map((booking) => ({
