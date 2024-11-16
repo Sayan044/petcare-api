@@ -30,7 +30,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     }
     catch (err) {
         res.status(403).json({
-            error: 'Authentication Failed'
+            message: 'Authentication Failed'
         })
     }
 }

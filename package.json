@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc -b && copyfiles -u 1 src/lib/mails/**/* dist",
-    "start": "node dist/index",
+    "start:dev": "node dist/index",
+    "start:prod": "node dist/index --omit=dev",
     "postinstall": "prisma generate"
   },
   "author": "",

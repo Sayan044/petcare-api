@@ -37,11 +37,11 @@ function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
     upload.single('photo')(req, res, (err) => {
         if (err) {
             console.log("MULTER ERROR -> ", err.message)
-            return res.status(500).json({ error: "Failed to upload" })
+            return res.status(500).json({ message: "Failed to upload" })
         }
 
         if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" })
+            return res.status(400).json({ message: "No file uploaded" })
         }
         next()
     })
