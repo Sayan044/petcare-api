@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const CONFIG = {
+    NODE_ENV: process.env.NODE_ENV as string,
     PORT: process.env.PORT,
     FRONTEND_URL: process.env.FRONTEND_URL as string,
     EMAIL: process.env.EMAIL as string,
