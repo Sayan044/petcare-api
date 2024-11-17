@@ -15,6 +15,10 @@ app.use(cors({
     origin: CONFIG.FRONTEND_URL,
     credentials: true
 }))
+
+app.disable('x-powered-by')
+app.set('trust proxy', 1)
+
 app.use(cookieSession({
     name: 'petcare_token',
     secret: CONFIG.COOKIE_SECRET,
