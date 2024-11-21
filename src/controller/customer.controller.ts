@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import path from 'node:path'
 import { Request, Response } from 'express'
 import { createCustomerInput, loginCustomerInput, updateProfileInput } from '../lib/types'
-import { createCustomer, getCustomerById, getCustomerIdByEmail, updateCustomer } from '../service/customer.service'
+import { createCustomer, getCustomerAppointmentsById, getCustomerBookingsById, getCustomerById, getCustomerIdByEmail, updateCustomer } from '../service/customer.service'
 import { CONFIG } from '../config'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
@@ -145,5 +145,35 @@ export async function updateProfileController(req: Request, res: Response) {
                 deleteFile(absolutePath)
             }
         }
+    }
+}
+
+export async function getCustomerAppointmentsController(req: Request, res: Response) {
+    // @ts-ignore
+    const customerID = req.customerID
+
+    try {
+        const customer_appointments = await getCustomerAppointmentsById(customerID)
+
+        res.status(200).json({ data: customer_appointments })
+    }
+    catch (err) {
+        console.error(`CUSTOMER-${customerID} APPOINTMENTS FETCHING FAILED`)
+        res.status(500).json({ message: "Failed to fetch appointments" })
+    }
+}
+
+export async function getCustomerBookingsController(req: Request, res: Response) {
+    // @ts-ignore
+    const customerID = req.customerID
+
+    try {
+        const customer_bookings = await getCustomerBookingsById(customerID)
+
+        res.status(200).json({ data: customer_bookings })
+    }
+    catch (err) {
+        console.error(`CUSTOMER-${customerID} BOOKINGS FETCHING FAILED`)
+        res.status(500).json({ message: "Failed to fetch bookings" })
     }
 }

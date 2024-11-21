@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import multer from 'multer'
 import path from 'node:path'
 import { NextFunction, Request, Response, Router } from 'express'
-import { createCustomerController, getProfileController, loginCustomerController, logoutController, updateProfileController } from '../controller/customer.controller'
+import { createCustomerController, getCustomerAppointmentsController, getCustomerBookingsController, getProfileController, loginCustomerController, logoutController, updateProfileController } from '../controller/customer.controller'
 import { authMiddleware } from '../middleware/verifySession'
 import { CONFIG } from '../config'
 
@@ -51,5 +51,8 @@ router.route('/logout').get(logoutController)
 
 router.route('/profile').get(authMiddleware, getProfileController)
 router.route('/profile/update').put(authMiddleware, uploadMiddleware, updateProfileController)
+
+router.route('/appointments').get(authMiddleware, getCustomerAppointmentsController)
+router.route('/bookings').get(authMiddleware, getCustomerBookingsController)
 
 export { router as customerRouter }

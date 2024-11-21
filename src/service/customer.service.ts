@@ -88,3 +88,57 @@ export async function updateCustomer(id: string, name: string, contact: string |
 
     return "Profile updated"
 }
+
+export async function getCustomerAppointmentsById(id: string): Promise<{}> {
+    const customer = await db.customer.findFirst({
+        where: { id },
+        select: {
+            appointment: {
+                select: {
+                    date: true,
+                    time: true,
+                    doctor: {
+                        select: {
+                            name: true,
+                            address: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    if (!customer) return []
+
+    return customer.appointment.map((item) => ({
+        ...item,
+        date: item.date.toLocaleDateString('en-IN')
+    }))
+}
+
+export async function getCustomerBookingsById(id: string) {
+    const customer = await db.customer.findFirst({
+        where: { id },
+        select: {
+            booking: {
+                select: {
+                    date: true,
+                    time: true,
+                    service: {
+                        select: {
+                            name: true,
+                            address: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    if (!customer) return []
+
+    return customer.booking.map((item) => ({
+        ...item,
+        date: item.date.toLocaleDateString('en-IN')
+    }))
+}
