@@ -200,7 +200,7 @@ export async function getServiceBookingsController(req: Request, res: Response) 
     const { service_id } = req.params
 
     try {
-        const bookings = await getServiceBookingsById(service_id.toString())
+        const bookings = await getServiceBookingsById(service_id)
 
         res.status(200).json({ data: bookings })
     }

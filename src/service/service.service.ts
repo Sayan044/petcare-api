@@ -144,7 +144,7 @@ export async function updateService(id: string, name: string, image: string, add
     return "Profile updated"
 }
 
-export async function getServiceBookingsById(id: string): Promise<{ date: string; time: string; customer_name: string }[]> {
+export async function getServiceBookingsById(id: string): Promise<{ date: string; time: string; customer_name: string, note: string | null }[]> {
     const service = await db.service.findFirst({
         where: { id },
         include: {
@@ -163,7 +163,8 @@ export async function getServiceBookingsById(id: string): Promise<{ date: string
     const formattedBookings = service.booking.map((booking) => ({
         date: booking.date.toDateString(),
         time: booking.time,
-        customer_name: booking.customer.name
+        customer_name: booking.customer.name,
+        note: booking.note
     }))
 
     return formattedBookings

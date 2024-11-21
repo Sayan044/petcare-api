@@ -144,7 +144,7 @@ export async function updateDoctor(id: string, name: string, image: string, addr
     return "Profile updated"
 }
 
-export async function getDoctorAppointmentsById(id: string): Promise<{ date: string; time: string; customer_name: string }[]> {
+export async function getDoctorAppointmentsById(id: string): Promise<{ date: string; time: string; customer_name: string; note: string | null }[]> {
     const doctor = await db.doctor.findFirst({
         where: { id },
         include: {
@@ -163,7 +163,8 @@ export async function getDoctorAppointmentsById(id: string): Promise<{ date: str
     const formattedAppointments = doctor.appointment.map((appointment) => ({
         date: appointment.date.toDateString(),
         time: appointment.time,
-        customer_name: appointment.customer.name
+        customer_name: appointment.customer.name,
+        note: appointment.note
     }))
 
     return formattedAppointments

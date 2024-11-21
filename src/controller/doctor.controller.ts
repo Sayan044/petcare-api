@@ -192,7 +192,7 @@ export async function getDoctorAppointmentsController(req: Request, res: Respons
     const { doctor_id } = req.params
 
     try {
-        const appointments = await getDoctorAppointmentsById(doctor_id.toString())
+        const appointments = await getDoctorAppointmentsById(doctor_id)
 
         res.status(200).json({ data: appointments })
     }
