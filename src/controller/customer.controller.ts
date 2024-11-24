@@ -7,7 +7,7 @@ import { createCustomer, getCustomerAppointmentsById, getCustomerBookingsById, g
 import { CONFIG } from '../config'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
-import { convertToLinuxPathStyle, imageURL, parseUploadPath } from '../utils/parse'
+import { convertToLinuxPathStyle, convertToURL, parseUploadPath } from '../utils/parse'
 
 export async function createCustomerController(req: Request, res: Response) {
     const parsedData = createCustomerInput.safeParse(req.body)
@@ -91,7 +91,7 @@ export async function getProfileController(req: Request, res: Response) {
 
         const formattedCustomerProfile = {
             ...customer_profile,
-            image: imageURL(customer_profile.image)
+            image: convertToURL(customer_profile.image)
         }
 
         res.status(200).json({ data: formattedCustomerProfile })

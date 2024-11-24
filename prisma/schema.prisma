@@ -126,10 +126,12 @@ model Record {
   last_vaccination  DateTime
   next_vaccination  DateTime
   weight            Float
-  age               Int?
+  age               String
   emergency_contact String
   customer_id       String
   customer          Customer @relation(fields: [customer_id], references: [id])
+
+  @@index([customer_id])
 }
 
 enum DogBreed {

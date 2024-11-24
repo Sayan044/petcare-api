@@ -4,7 +4,7 @@ import { createCategoryInput } from '../lib/types'
 import { createCategory, getCategories } from '../service/category.service'
 import { APIError, AppError } from '../lib/errors'
 import { deleteFile } from '../utils/deleteFile'
-import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
+import { convertToLinuxPathStyle, convertToURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { CategoryDomain } from '@prisma/client'
 
 export async function createCategoryController(req: Request, res: Response) {
@@ -41,8 +41,8 @@ export async function createCategoryController(req: Request, res: Response) {
     catch (err) {
         if (err instanceof APIError) {
             console.error("Error creating category: ", err.message)
-            deleteFile(absolutePath)
         }
+        deleteFile(absolutePath)
         res.status(500).json({ message: "Failed to create category" })
     }
 }
@@ -53,7 +53,7 @@ export async function getCategoryController(req: Request, res: Response) {
 
         const formattedCategories = categories.map((category) => ({
             ...category,
-            icon: imageURL(category.icon)
+            icon: convertToURL(category.icon)
         }))
 
         res.status(200).json({ data: formattedCategories })

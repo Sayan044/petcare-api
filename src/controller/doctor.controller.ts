@@ -5,7 +5,7 @@ import { createDoctorInput, loginDoctorInput, updateDoctorInput } from '../lib/t
 import { APIError, AppError } from '../lib/errors'
 import { createDoctor, getDoctorAppointmentsById, getDoctorByEmail, getDoctorById, getDoctorIdByEmail, getDoctors, updateDoctor } from '../service/doctor.service'
 import { CONFIG } from '../config'
-import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
+import { convertToLinuxPathStyle, convertToURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
 import { decrypt, encrypt } from '../utils/encrypt-decrypt'
@@ -82,7 +82,7 @@ export async function getDoctorProfileController(req: Request, res: Response) {
 
         const formattedDoctorProfile = {
             ...doctor_profile,
-            image: imageURL(doctor_profile.image)
+            image: convertToURL(doctor_profile.image)
         }
 
         res.status(200).json({ data: formattedDoctorProfile })
@@ -153,7 +153,7 @@ export async function getDoctorsController(req: Request, res: Response) {
         const formattedDoctors = doctors.map((doctor) => ({
             ...doctor,
             email: encrypt(doctor.email),
-            image: imageURL(doctor.image)
+            image: convertToURL(doctor.image)
         }))
 
         res.status(200).json({ data: formattedDoctors })
@@ -175,7 +175,7 @@ export async function getSpecificDoctorController(req: Request, res: Response) {
 
         const formattedDoctor = {
             ...doctor,
-            image: imageURL(doctor.image)
+            image: convertToURL(doctor.image)
         }
 
         res.status(200).json({ data: formattedDoctor })

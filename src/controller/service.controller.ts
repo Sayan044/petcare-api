@@ -4,7 +4,7 @@ import { Request, Response } from 'express'
 import { createServiceInput, loginServiceInput, updateServiceInput } from '../lib/types'
 import { APIError, AppError } from '../lib/errors'
 import { CONFIG } from '../config'
-import { convertToLinuxPathStyle, imageURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
+import { convertToLinuxPathStyle, convertToURL, parseCategoryDomain, parseUploadPath } from '../utils/parse'
 import { createService, getServiceBookingsById, getServiceByEmail, getServiceById, getServiceIdByEmail, getServicesByCategoryId, updateService } from '../service/service.service'
 import { sendMail } from '../lib/mail'
 import { deleteFile } from '../utils/deleteFile'
@@ -82,7 +82,7 @@ export async function getServiceProfileController(req: Request, res: Response) {
 
         const formattedServiceProfile = {
             ...service_profile,
-            image: imageURL(service_profile.image)
+            image: convertToURL(service_profile.image)
         }
 
         res.status(200).json({ data: formattedServiceProfile })
@@ -161,7 +161,7 @@ export async function getServicesByCategoryIdController(req: Request, res: Respo
         const formattedServices = services.map((service) => ({
             ...service,
             email: encrypt(service.email),
-            image: imageURL(service.image)
+            image: convertToURL(service.image)
         }))
 
         res.status(200).json({ data: formattedServices })
@@ -183,7 +183,7 @@ export async function getSpecificServiceController(req: Request, res: Response) 
 
         const formattedService = {
             ...service,
-            image: imageURL(service.image)
+            image: convertToURL(service.image)
         }
 
         res.status(200).json({ data: formattedService })
