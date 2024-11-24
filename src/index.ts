@@ -23,7 +23,7 @@ app.use(cookieSession({
     name: 'petcare_token',
     secret: CONFIG.COOKIE_SECRET,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'none',
+    sameSite: CONFIG.NODE_ENV === 'development' ? 'lax' : 'none',
     secure: CONFIG.NODE_ENV === 'development' ? false : true
 }))
 app.use(compression({

@@ -42,7 +42,7 @@ export async function uploadRecordController(req: Request, res: Response) {
             dogBreed,
             parsedData.data.pet_name,
             parsedData.data.medical_history,
-            parsedData.data.document_link,
+            [parsedData.data.document_link],
             pet_documents,
             symptom,
             lastVaccinationDate,

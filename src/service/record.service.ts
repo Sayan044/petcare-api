@@ -34,5 +34,51 @@ export async function getRecordsByCustomerID(customer_id: string) {
 
     if (!records) throw new APIError("Failed to fetch records")
 
-    return records
+    return records.map(record => ({
+        ...record,
+        type: mapDogBreedToString(record.type),
+        symptom: mapSymptomToString(record.symptom)
+    }))
+}
+
+function mapDogBreedToString(breed: DogBreed): string {
+    switch (breed) {
+        case DogBreed.LABRADOR_RETRIEVER:
+            return "Labrador Retriever";
+        case DogBreed.GERMAN_SHEPHERD:
+            return "German Shepherd";
+        case DogBreed.BULLDOG:
+            return "Bulldog";
+        case DogBreed.POODLE:
+            return "Poodle";
+        case DogBreed.BEAGLE:
+            return "Beagle";
+        case DogBreed.GOLDEN_RETRIEVER:
+            return "Golden Retriever";
+        case DogBreed.HUSKY:
+            return "Husky";
+        case DogBreed.INDIAN_BREED:
+            return "Indian Breed";
+        default:
+            return breed;
+    }
+}
+
+function mapSymptomToString(symptom: Symptom): string {
+    switch (symptom) {
+        case Symptom.COUGHING:
+            return "Coughing";
+        case Symptom.SNEEZING:
+            return "Sneezing";
+        case Symptom.VOMITING:
+            return "Vomiting";
+        case Symptom.DIARRHEA:
+            return "Diarrhea";
+        case Symptom.LETHARGY:
+            return "Lethargy";
+        case Symptom.LOSS_OF_APPETITE:
+            return "Loss of Appetite";
+        default:
+            return symptom;
+    }
 }
