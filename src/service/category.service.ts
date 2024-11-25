@@ -21,9 +21,8 @@ export async function getCategories(): Promise<{ id: string; name: string; icon:
     if (!categories) throw new AppError("Could not fetch categories")
 
     return categories.map(category => ({
-        id: category.id,
+        ...category,
         name: mapCategoryDomainToString(category.name),
-        icon: category.icon,
     }))
 }
 
