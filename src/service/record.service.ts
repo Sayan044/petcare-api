@@ -36,6 +36,8 @@ export async function getRecordsByCustomerID(customer_id: string) {
 
     return records.map(record => ({
         ...record,
+        last_vaccination: record.last_vaccination.toLocaleDateString('en-IN'),
+        next_vaccination: record.next_vaccination.toLocaleDateString('en-IN'),
         type: mapDogBreedToString(record.type),
         symptom: mapSymptomToString(record.symptom)
     }))
