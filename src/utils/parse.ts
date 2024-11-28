@@ -8,20 +8,6 @@ export function parseCategoryDomain(name: string): CategoryDomain | null {
     return null
 }
 
-export function parseDogBreed(name: string): DogBreed | null {
-    if (Object.values(DogBreed).includes(name as DogBreed)) {
-        return name as DogBreed
-    }
-    return null
-}
-
-export function parseSymptom(name: string): Symptom | null {
-    if (Object.values(Symptom).includes(name as Symptom)) {
-        return name as Symptom
-    }
-    return null
-}
-
 export function convertToLinuxPathStyle(path: string): string {
     return path.replace(/\\/g, '/')
 }

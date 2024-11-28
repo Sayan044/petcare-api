@@ -117,39 +117,33 @@ model Booking {
 
 model Record {
   id                String   @id @default(uuid())
-  type              DogBreed
   pet_name          String
   medical_history   String
-  document_link     String[]
+  document_link     String?
   pet_documents     String[]
-  symptom           Symptom
   last_vaccination  DateTime
   next_vaccination  DateTime
   weight            Float
   age               String
   emergency_contact String
+  dogBreed_id       Int
+  dogBreed          DogBreed @relation(fields: [dogBreed_id], references: [id])
+  symptom_id        Int
+  symptom           Symptom  @relation(fields: [symptom_id], references: [id])
   customer_id       String
   customer          Customer @relation(fields: [customer_id], references: [id])
 
   @@index([customer_id])
 }
 
-enum DogBreed {
-  LABRADOR_RETRIEVER @map("Labrador Retriever")
-  GERMAN_SHEPHERD    @map("German Shepherd")
-  BULLDOG            @map("Bulldog")
-  POODLE             @map("Poodle")
-  BEAGLE             @map("Beagle")
-  GOLDEN_RETRIEVER   @map("Golden Retriever")
-  HUSKY              @map("Husky")
-  INDIAN_BREED       @map("Indian Breed")
+model DogBreed {
+  id         Int      @id @default(autoincrement())
+  breed_name String   @unique
+  record     Record[]
 }
 
-enum Symptom {
-  COUGHING         @map("Coughing")
-  SNEEZING         @map("Sneezing")
-  VOMITING         @map("Vomiting")
-  DIARRHEA         @map("Diarrhea")
-  LETHARGY         @map("Lethargy")
-  LOSS_OF_APPETITE @map("Loss of Appetite")
+model Symptom {
+  id           Int      @id @default(autoincrement())
+  symptom_name String   @unique
+  record       Record[]
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { createRecordInput } from '../lib/types'
-import { convertToLinuxPathStyle, convertToURL, parseDogBreed, parseSymptom, parseUploadPath } from '../utils/parse'
+import { convertToLinuxPathStyle, convertToURL, parseUploadPath } from '../utils/parse'
 import { addRecord, getRecordsByCustomerID } from '../service/record.service'
 import { APIError } from '../lib/errors'
 
@@ -19,15 +19,6 @@ export async function uploadRecordController(req: Request, res: Response) {
         return
     }
 
-    const dogBreed = parseDogBreed(parsedData.data.type)
-    const symptom = parseSymptom(parsedData.data.symptom)
-    if (!dogBreed || !symptom) {
-        res.status(400).json({
-            message: "Invalid breed or symptom."
-        })
-        return
-    }
-
     const lastVaccinationDate = new Date(parsedData.data.last_vaccination)
     const nextVaccinationDate = new Date(parsedData.data.next_vaccination)
     if (isNaN(lastVaccinationDate.getTime()) || isNaN(nextVaccinationDate.getTime())) {
@@ -39,12 +30,12 @@ export async function uploadRecordController(req: Request, res: Response) {
 
     try {
         const record = await addRecord(
-            dogBreed,
             parsedData.data.pet_name,
+            parsedData.data.type,
+            parsedData.data.symptom,
             parsedData.data.medical_history,
-            [parsedData.data.document_link],
+            parsedData.data.document_link,
             pet_documents,
-            symptom,
             lastVaccinationDate,
             nextVaccinationDate,
             parseFloat(parsedData.data.weight),

@@ -1,22 +1,35 @@
-import { DogBreed, Symptom } from "@prisma/client"
 import { db } from "../config/prisma.config"
 import { APIError } from "../lib/errors"
 
-export async function addRecord(type: DogBreed, pet_name: string, medical_history: string, document_link: string[], pet_documents: string[], symptom: Symptom, last_vaccination: Date, next_vaccination: Date, weight: number, age: string, emergency_contact: string, customer_id: string) {
+export async function addRecord(pet_name: string, type: string, symptom: string, medical_history: string, document_link: string | null | undefined, pet_documents: string[], last_vaccination: Date, next_vaccination: Date, weight: number, age: string, emergency_contact: string, customer_id: string) {
+    const existingDogBreed = await db.dogBreed.findUnique({
+        where: {
+            breed_name: type
+        }
+    })
+
+    const existingSymptom = await db.symptom.findUnique({
+        where: {
+            symptom_name: symptom
+        }
+    })
+
+    if (!existingDogBreed || !existingSymptom) throw new APIError("Inavlid Dog-Breed or Symptom")
+
     const record = await db.record.create({
         data: {
-            type,
             pet_name,
             medical_history,
             document_link,
             pet_documents,
-            symptom,
             last_vaccination,
             next_vaccination,
             weight,
             age,
             emergency_contact,
-            customer_id
+            customer_id,
+            dogBreed_id: existingDogBreed.id,
+            symptom_id: existingSymptom.id,
         }
     })
 
@@ -29,6 +42,10 @@ export async function getRecordsByCustomerID(customer_id: string) {
     const records = await db.record.findMany({
         where: {
             customer_id
+        },
+        include: {
+            dogBreed: true,
+            symptom: true
         }
     })
 
@@ -38,49 +55,7 @@ export async function getRecordsByCustomerID(customer_id: string) {
         ...record,
         last_vaccination: record.last_vaccination.toLocaleDateString('en-IN'),
         next_vaccination: record.next_vaccination.toLocaleDateString('en-IN'),
-        type: mapDogBreedToString(record.type),
-        symptom: mapSymptomToString(record.symptom)
+        dogBreed: record.dogBreed.breed_name,
+        symptom: record.symptom.symptom_name
     }))
-}
-
-function mapDogBreedToString(breed: DogBreed): string {
-    switch (breed) {
-        case DogBreed.LABRADOR_RETRIEVER:
-            return "Labrador Retriever";
-        case DogBreed.GERMAN_SHEPHERD:
-            return "German Shepherd";
-        case DogBreed.BULLDOG:
-            return "Bulldog";
-        case DogBreed.POODLE:
-            return "Poodle";
-        case DogBreed.BEAGLE:
-            return "Beagle";
-        case DogBreed.GOLDEN_RETRIEVER:
-            return "Golden Retriever";
-        case DogBreed.HUSKY:
-            return "Husky";
-        case DogBreed.INDIAN_BREED:
-            return "Indian Breed";
-        default:
-            return breed;
-    }
-}
-
-function mapSymptomToString(symptom: Symptom): string {
-    switch (symptom) {
-        case Symptom.COUGHING:
-            return "Coughing";
-        case Symptom.SNEEZING:
-            return "Sneezing";
-        case Symptom.VOMITING:
-            return "Vomiting";
-        case Symptom.DIARRHEA:
-            return "Diarrhea";
-        case Symptom.LETHARGY:
-            return "Lethargy";
-        case Symptom.LOSS_OF_APPETITE:
-            return "Loss of Appetite";
-        default:
-            return symptom;
-    }
 }

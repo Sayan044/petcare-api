@@ -32,7 +32,7 @@ const upload = multer({
 })
 
 function uploadMiddleware(req: Request, res: Response, next: NextFunction) {
-    upload.fields([{ name: 'documents', maxCount: 2 }])(req, res, (err) => {
+    upload.fields([{ name: 'documents', maxCount: 3 }])(req, res, (err) => {
         if (err) {
             console.log("MULTER ERROR -> ", err.message)
             return res.status(500).json({ message: err.message })

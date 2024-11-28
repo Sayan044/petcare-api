@@ -6,7 +6,7 @@ import morgan from 'morgan'
 import { createServer } from 'node:http'
 import path from 'node:path'
 import { CONFIG } from './config'
-import { appointmentRouter, authRouter, bookingRouter, categoryRouter, customerRouter, doctorRouter, recordRouter, serviceRouter } from './router'
+import { appointmentRouter, authRouter, bookingRouter, categoryRouter, customerRouter, doctorRouter, dogBreedRouter, recordRouter, serviceRouter, symptomRouter } from './router'
 
 const app: Application = express()
 const httpServer = createServer(app)
@@ -41,6 +41,8 @@ router.use('/auth', authRouter)
 router.use('/appointment', appointmentRouter)
 router.use('/booking', bookingRouter)
 router.use('/category', categoryRouter)
+router.use('/dog-breed', dogBreedRouter)
+router.use('/symptom', symptomRouter)
 router.use('/customer', customerRouter)
 router.use('/doctor', doctorRouter)
 router.use('/record', recordRouter)

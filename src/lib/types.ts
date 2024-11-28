@@ -88,11 +88,19 @@ export const createRecordInput = z.object({
     type: z.string(),
     pet_name: z.string(),
     medical_history: z.string(),
-    document_link: z.string(),
+    document_link: z.string().nullish(),
     symptom: z.string(),
     last_vaccination: z.string(),
     next_vaccination: z.string(),
     weight: z.string(),
     age: z.string(),
     emergency_contact: z.string()
+})
+
+export const createDogBreedInput = z.object({
+    breed_name: z.string()
+})
+
+export const createSymptomInput = z.object({
+    symptom_name: z.string()
 })
